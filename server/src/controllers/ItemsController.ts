@@ -2,6 +2,8 @@ import { Request, Response } from 'express';
 import knex from '../database/connection';
 
 class ItemsController{
+    //Função para exibir todos os items 
+    //Os items são informações estáticad no sistema
     async index(request: Request, response: Response){
         const items = await knex('items').select('*');
     

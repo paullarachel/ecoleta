@@ -2,13 +2,16 @@ import { Request, Response } from 'express';
 import knex from '../database/connection';
 
 class PointsController {
+    //Função para listar pontos de coleta filtrados por items, cidade e estado
     async index(request: Request, response: Response) {
         const { city, uf, items } = request.query;
-
+        
+        //Dando um split para pegar os items pois eles são enviados em uma única string, separados por vírgula
         const parsedItems = String(items)
         .split(',')
         .map(item => Number(item.trim()));
 
+        //Join para pegar todos os dados de um ponto onde há os dados que foram informados para filtragem
         const points = await knex('points')
           .join('point_items', 'points.id', '=', 'point_items.point_id')
           .whereIn('point_items.item_id', parsedItems)
@@ -19,6 +22,7 @@ class PointsController {
 
         return response.json(points);
     }
+    // Função para exibir os dados de um ponto de coleta e seus items
     async show(request: Request, response: Response){
         const { id } = request.params;
 
@@ -27,11 +31,12 @@ class PointsController {
         if(!point) {
             return response.status(400).json({ message: 'Point not found.' });
         }
-
+        // join para pegar os itens associados ao ponto de coleta
         const items = await knex('items').join('point_items', 'items.id', '=', 'point_items.item_id').where('point_items.point_id', id).select('items.title');
-
+        
         return response.json({ point, items });
     }
+    //Função para cadastro de um ponto de coleta
     async create(request: Request, response: Response){
         const {
             name,
