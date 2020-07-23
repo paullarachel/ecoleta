@@ -1,10 +1,14 @@
 import React from 'react';
 import './App.css';
+import Routes from './routes';
 
 // JSX: Sintaxe de XML dentro do JavaScript
+// A função Header() é escrita como uma tag html
 function App() {
   return (
-    <h1>a</h1>
+     <div>
+       <Routes></Routes>
+     </div>
   );
 }
 
